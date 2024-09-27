@@ -1,5 +1,5 @@
 use entity::{Draw, Entity};
-use helper::{cross};
+use helper::{cross, rand_pos, rand_vec2};
 use macroquad::prelude::*;
 
 mod entity;
@@ -14,12 +14,11 @@ async fn main() {
     let (width, height) = (screen_width(), screen_height());
 
     for _ in 0..quantity {
-        let x = rand::gen_range(0.0, width);
-        let y = rand::gen_range(0.0, height);
-        println!("x , y - {:?} {:?}", x, y);
-        let position = Vec2::new(x ,y);
+        let velocity = rand_vec2(-0.01, 0.01);
+        let position = rand_pos(width, height );
         let mut entity = Entity::default();
         entity.set_position(position);
+        entity.set_velocity(velocity);
 
         entities.push(entity);
     }
@@ -27,8 +26,10 @@ async fn main() {
     loop {
         clear_background(night_blue);        
         cross(width, height);
-        for entity in entities.iter() {
+        
+        for entity in entities.iter_mut() {
             entity.draw();
+            entity.moving();
         }
         
         next_frame().await
