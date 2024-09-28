@@ -22,10 +22,18 @@ async fn main() {
 
         entities.push(entity);
     }
-    
+
+    entities[0].toggle_debug();
+        
     loop {
         clear_background(night_blue);        
         cross(width, height);
+
+        let delta_time = get_frame_time();
+
+        // println!("delta - {:?}", delta_time);
+
+        println!("{:?}", entities[0]);
         
         for entity in entities.iter_mut() {
             entity.draw();
