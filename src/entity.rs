@@ -13,16 +13,18 @@ pub trait Draw {
 pub struct Entity {
     position: Vec2,
     velocity: Vec2,
+    acceleration: Vec2,
     mass: f32,
     debug: bool,
 }
 
 impl Entity {
-    pub fn new(x: f32, y: f32, mass: f32, velocity: Vec2) -> Self {
+    pub fn new(x: f32, y: f32, mass: f32, acceleration: Vec2, velocity: Vec2) -> Self {
         Self {
             position: Vec2::new(x, y),
             mass,
             velocity,
+            acceleration,
             debug: false,
         }
     }
@@ -44,7 +46,14 @@ impl Entity {
     }
 
     pub fn moving(&mut self) {
+        self.velocity += self.acceleration;
         self.position += self.velocity;
+
+        self.acceleration = Vec2::ZERO;
+    }
+
+    pub fn apply_force(&mut self, force: Vec2) {
+        self.acceleration += force / self.mass;
     }
 }
 
@@ -53,6 +62,7 @@ impl Default for Entity {
         Self {
             position: Vec2::default(),
             velocity: Vec2::default(),
+            acceleration: Vec2::default(),
             mass: 1.0,
             debug: false,
         }
@@ -83,6 +93,6 @@ impl Draw for Entity {
                 RED,
             );
         }
-        draw_circle(self.position.x, self.position.y, 1.0, WHITE);
+        draw_circle(self.position.x, self.position.y, self.mass, WHITE);
     }
 }
