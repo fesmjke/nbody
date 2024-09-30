@@ -18,3 +18,7 @@ pub fn rand_pos(w: f32, h: f32) -> Vec2 {
 
     Vec2::new(x, y)
 }
+
+pub fn rand_mass(min: f32, max: f32) -> f32 {
+    gen_range(min, max)
+}
