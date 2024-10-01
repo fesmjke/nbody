@@ -6,6 +6,8 @@ use macroquad::{
     shapes::{draw_circle, draw_rectangle_lines},
 };
 
+use crate::helper::GI;
+
 pub trait Draw {
     fn draw(&self);
 }
@@ -55,8 +57,15 @@ impl Entity {
     pub fn apply_force(&mut self, force: Vec2) {
         self.acceleration += force / self.mass;
     }
-}
 
+    pub fn force_attraction(&self, other: &Entity) -> Vec2 {
+        let direction = self.position - other.position;
+        let distance = direction.length_squared();
+        let magnitude = (GI * self.mass * other.mass) / distance * distance;
+
+        magnitude * direction.normalize()
+    }
+}
 impl Default for Entity {
     fn default() -> Self {
         Self {
